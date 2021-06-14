@@ -5,13 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/*typedef struct state_array
-{
-	uint32_t w;
-	uint8_t *array[5][5];
-}
-stateray_t;*/
-
 static uint8_t log_2(uint32_t n)
 {
 	uint8_t p;
