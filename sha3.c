@@ -15,7 +15,7 @@ static uint8_t *sha3(uint32_t c, const char *M, uint32_t m_len, uint32_t d)
 	if(new_m == NULL) return NULL;
 
 	for(i = 0; i < m_len; i++) new_m[i] = M[i];
-	new_m[m_len] = 0xC0;
+	new_m[m_len] = 0x40;
 
 	hash = keccak_c(c, new_m, m_len * 8 + 2, d);
 

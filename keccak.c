@@ -2,7 +2,6 @@
 
 #include "sponge.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 
 static uint8_t log_2(uint32_t n)
@@ -89,9 +88,9 @@ void STATERAY_fill(stateray_t *state_array, const uint8_t *S)
 	uint8_t x, y, z, bit;
 	uint32_t c_i;
 
-	for(x = 0; x < 5; x++)
+	for(y = 0; y < 5; y++)
 	{
-		for(y = 0; y < 5; y++)
+		for(x = 0; x < 5; x++)
 		{
 			for(z = 0; z < state_array->w; z++)
 			{
@@ -142,7 +141,7 @@ stateray_t *theta(const stateray_t *A)
 
 	for(i = 0; i < 5; i++)
 	{
-		C[i] = malloc(A->w * sizeof(uint8_t));
+		C[i] = calloc(A->w, sizeof(uint8_t));
 
 		if(C[i] == NULL)
 		{
@@ -174,19 +173,20 @@ stateray_t *theta(const stateray_t *A)
 	}
 
 	
-	/* Assign values of C[x, z] */
+	/* Assign values of C[x,z] */
 	for(x = 0; x < 5; x++)
 	{
 		for(z = 0; z < A->w; z++)
 		{
-			C[x][z] = get(A, x, 0, z);
-			for(i = 1; i < 5; i++)
+			for(i = 0; i < 5; i++)
+			{
 				C[x][z] ^= get(A, x, i, z);
+			}
 		}
 	}
 
 
-	/* Assign values of D[x, z] */
+	/* Assign values of D[x,z] */
 	for(x = 0; x < 5; x++)
 	{
 		for(z = 0; z < A->w; z++)
@@ -197,6 +197,7 @@ stateray_t *theta(const stateray_t *A)
 
 
 	for(i = 0; i < 5; i++) free(C[i]);
+	C[0] = malloc(1 * sizeof(uint8_t));
 	
 
 	if(!STATERAY_init(A_prime, A->w))
@@ -213,9 +214,12 @@ stateray_t *theta(const stateray_t *A)
 	for(x = 0; x < 5; x++)
 		for(i = 0; i < 5; i++)
 			for(z = 0; z < A->w; z++)
-				set(A_prime, x, i, z, get(A, x, i, z) ^ D[x][z]);
+			{
+				C[0][0] = D[x][z] ^ get(A, x, i, z);
+				set(A_prime, x, i, z, C[0][0]);
+			}
 
-
+	free(C[0]);
 	for(i = 0; i < 5; i++) free(D[i]);
 
 	return A_prime;
