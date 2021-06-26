@@ -12,7 +12,7 @@ static uint8_t log_2(uint32_t n)
 	if(n == 0) return 0;
 
 	p = 0;
-	while(lsb > 0)
+	while(lsb > 1)
 	{
 		lsb >>= 1;
 		p++;
