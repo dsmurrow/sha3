@@ -396,7 +396,7 @@ stateray_t *iota(const stateray_t *A, uint8_t i_r)
 	/* For j from 0 to l, let RC[2^j - 1] = rc(j+7i_r) */
 	for(j = 0; j <= log_2(A->w); j++)
 	{
-		RC |= rc(j + 7 * i_r) << ((1 << j) - 1);
+		RC |= (uint64_t)rc(j + 7 * i_r) << ((1 << j) - 1);
 	}
 
 	/* For all z such that 0 <= z < w,
