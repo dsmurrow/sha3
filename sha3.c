@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-static uint8_t *sha3(uint32_t c, uint8_t *M, uint32_t m_len, uint32_t d)
+static uint8_t *sha3(uint32_t c, const uint8_t *M, uint32_t m_len, uint32_t d)
 {
 	uint8_t *new_m;
 	uint32_t i;
@@ -24,28 +24,28 @@ static uint8_t *sha3(uint32_t c, uint8_t *M, uint32_t m_len, uint32_t d)
 	return hash;
 }
 
-uint8_t *sha3_224(uint8_t *M, uint32_t m_len)
+uint8_t *sha3_224(const uint8_t *M, uint32_t m_len)
 {
 	return sha3(448, M, m_len, 224);
 }
 
-uint8_t *sha3_256(uint8_t *M, uint32_t m_len)
+uint8_t *sha3_256(const uint8_t *M, uint32_t m_len)
 {
 	return sha3(512, M, m_len, 256);
 }
 
-uint8_t *sha3_384(uint8_t *M, uint32_t m_len)
+uint8_t *sha3_384(const uint8_t *M, uint32_t m_len)
 {
 	return sha3(768, M, m_len, 384);
 }
 
-uint8_t *sha3_512(uint8_t *M, uint32_t m_len)
+uint8_t *sha3_512(const uint8_t *M, uint32_t m_len)
 {
 	return sha3(1024, M, m_len, 512);
 }
 
 
-static uint8_t *shake(uint32_t c, uint8_t *M, uint32_t m_len, uint32_t d)
+static uint8_t *shake(uint32_t c, const uint8_t *M, uint32_t m_len, uint32_t d)
 {
 	uint8_t *new_m, *hash;
 	uint32_t i;
@@ -65,12 +65,12 @@ static uint8_t *shake(uint32_t c, uint8_t *M, uint32_t m_len, uint32_t d)
 	return hash;
 }
 
-uint8_t *shake_128(uint8_t *M, uint32_t m_len, uint32_t d)
+uint8_t *shake_128(const uint8_t *M, uint32_t m_len, uint32_t d)
 {
 	return shake(256, M, m_len, d);
 }
 
-uint8_t *shake_256(uint8_t *M, uint32_t m_len, uint32_t d)
+uint8_t *shake_256(const uint8_t *M, uint32_t m_len, uint32_t d)
 {
 	return shake(512, M, m_len, d);
 }
