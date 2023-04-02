@@ -1,3 +1,6 @@
+#include "sha3.h"
+
+#include "conversion.h"
 #include "keccak.h"
 
 #include <stdlib.h>
@@ -10,16 +13,19 @@ static uint8_t *sha3(uint32_t c, const uint8_t *M, uint32_t m_len, uint32_t d)
 
 	if(c != d * 2 && d != 224 && d != 256 && d != 384 && d != 512) return NULL;
 
-	new_m = calloc(m_len + 1, sizeof(uint8_t));
-
+	new_m = malloc((m_len + 1) * sizeof(uint8_t));
 	if(new_m == NULL) return NULL;
 
 	for(i = 0; i < m_len; i++) new_m[i] = M[i];
 	new_m[m_len] = 0x40;
 
+	h2b(new_m, m_len, m_len * 8);
+
 	hash = keccak_c(c, new_m, m_len * 8 + 2, d);
 
 	free(new_m);
+
+	b2h(hash, d);
 
 	return hash;
 }
@@ -52,15 +58,19 @@ static uint8_t *shake(uint32_t c, const uint8_t *M, uint32_t m_len, uint32_t d)
 
 	if(c != 256 && c != 512) return NULL;
 
-	new_m = calloc(m_len + 1, sizeof(uint8_t));
+	new_m = malloc((m_len + 1) * sizeof(uint8_t));
 	if(new_m == NULL) return NULL;
 
 	for(i = 0; i < m_len; i++) new_m[i] = M[i];
 	new_m[m_len] = 0xF0;
 
+	h2b(new_m, m_len, m_len * 8);
+
 	hash = keccak_c(c, new_m, m_len * 8 + 4, d);
 
 	free(new_m);
+
+	b2h(hash, d);
 
 	return hash;
 }
