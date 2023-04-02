@@ -2,50 +2,54 @@
 
 #include <stdlib.h>
 
-uint8_t *h2b(const uint8_t *H, uint32_t m, uint32_t n)
+int h2b(uint8_t *H, uint32_t m, uint32_t n)
 {
-	uint8_t *T, j, bit;
+	uint8_t j, bit, hold;
 	uint32_t i;
 
-	if(H == NULL) return NULL;
+	if(H == NULL) return -1;
 
 	if(n > 8 * m || !n) n = 8 * m;
-
-	T = calloc((n / 8) + (n % 8 != 0), sizeof(uint8_t));
-	if(T == NULL) return NULL;
 
 
 	for(i = 0; i < m && 8 * i + j < n; i++)
 	{
+		hold = 0;
 		for(j = 0; j < 8 && 8 * i + j < n; j++)
 		{
 			bit = (H[i] >> j) & 1;
-			T[i] |= bit << (7 - j);
+			hold |= bit << (7 - j);
 		}
 
+		H[i] = hold;
 		j = 0;
 	}
 
-	return T;
+	return 0;
 }
 
-uint8_t *b2h(const uint8_t *S, uint32_t n)
+int b2h(uint8_t *S, uint32_t n)
 {
-	uint8_t *H, bit;
+	uint8_t bit, hold;
 	uint32_t m, i;
 
-	if(S == NULL) return NULL;
+	if(S == NULL) return -1;
 
 	m = (n / 8) + (n % 8 != 0);
 
-	H = calloc(m, sizeof(uint8_t));
-
+	hold = 0;
 	for(i = 0; i < n; i++)
 	{
 		bit = (S[i / 8] >> (7 - (i % 8))) & 1;
-		H[i / 8] |= bit << (i % 8);
+		hold |= bit << (i % 8);
+
+		if(i % 8 == 7)
+		{
+			S[i / 8] = hold;
+			hold = 0;
+		}
 	}
 
-	return H;
+	return 0;
 }
 
